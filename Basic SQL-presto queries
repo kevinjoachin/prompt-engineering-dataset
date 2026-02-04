@@ -1,0 +1,42 @@
+-- =====================================================
+-- BASIC QUERIES - START HERE FOR BEGINNERS
+-- =====================================================
+
+-- Query 1: Count records in each table
+SELECT 'prompt_examples' AS table_name, COUNT(*) AS record_count FROM prompt_examples
+UNION ALL
+SELECT 'response_examples', COUNT(*) FROM response_examples
+UNION ALL
+SELECT 'labeled_train', COUNT(*) FROM labeled_train
+UNION ALL
+SELECT 'labeled_validation', COUNT(*) FROM labeled_validation;
+
+-- Query 2: View sample data from prompt_examples
+SELECT * 
+FROM prompt_examples 
+LIMIT 5;
+
+-- Query 3: View sample data from labeled_train
+SELECT 
+    original_prompt,
+    instruction,
+    improved_instruction
+FROM labeled_train 
+LIMIT 5;
+
+-- Query 4: Check for prompts with context
+SELECT 
+    has_context,
+    COUNT(*) AS count,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS percentage
+FROM prompt_examples
+GROUP BY has_context;
+
+-- Query 5: Get basic statistics
+SELECT 
+    COUNT(*) AS total_prompts,
+    COUNT(DISTINCT conversation_id) AS unique_conversations,
+    AVG(LENGTH(original_prompt)) AS avg_prompt_length,
+    MAX(LENGTH(original_prompt)) AS max_prompt_length,
+    MIN(LENGTH(original_prompt)) AS min_prompt_length
+FROM prompt_examples;
